@@ -1,8 +1,8 @@
 NAME = philo
 SRC_D = mandatory
-SRC = $(SRC_D)/philo.c $(SRC_D)/parcing.c $(SRC_D)/libft0.c
+SRC = $(SRC_D)/philo.c $(SRC_D)/parcing.c $(SRC_D)/libft0.c $(SRC_D)/data_init.c &(SRC_D)/simulation.c
 OBJ = $(SRC:.c=.o)
-CC = cc
+CC = cc -g -fsanitize=address
 FLAGS = -Wall -Wextra -Werror
 
 all: $(NAME)

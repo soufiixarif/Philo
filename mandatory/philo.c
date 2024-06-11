@@ -1,61 +1,40 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   philo.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: sarif <sarif@student.1337.ma>              +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/11 20:21:41 by sarif             #+#    #+#             */
-/*   Updated: 2024/05/21 12:12:31 by sarif            ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #include "philo.h"
 
-void	simulation(t_data *ph)
+void mentor_routine(t_data *ph)
 {
-	pthread_mutex_t *forks;
-	int i;
+	t_philo *philo;
+	int		cur_time;
 
-	i = 0;
-	forks = malloc(ph->philo_num *(sizeof (pthread_mutex_t)));
-	while (i < ph->philo_num)
+	while (1)
 	{
-		if (i % 2 == 0)
-			usleep(1e4);
-		else
-		{	
-			pthread_mutex_lock(forks);
-			printf("philosopher %d eating ...\n",i);
-			usleep(ph->eating_time);
-			pthread_mutex_unlock(forks);
+		philo = ph->philos;
+		while(philo)
+		{
+			pthread_mutex_lock(&ph->lock);
+			cur_time = get_current_time();
+			if(cur_time - philo->last_meal > ph->dying_time)
+			{
+				pthread_mutex_lock(&ph->dead);
+				ph->dead_flag = true;
+				pthread_mutex_unlock(&ph->dead);
+			}
+			philo = philo->next;
 		}
-		i++;
 	}
-	
-	free(forks);
 }
+
 void	start_simulation(t_data *ph)
 {
-	pthread_t *philosophers;
-	int i;
-
-	i = 0;
-	philosophers = malloc(ph->philo_num *(sizeof (pthread_t)));
-	while (i < ph->philo_num)
-		pthread_create(&philosophers[i++], NULL, (void *)simulation, NULL);
-	i = 0;
-	while (i < ph->philo_num)
-		pthread_join(philosophers[i++], NULL);
-	free(philosophers);
+	data_init(ph);
+	simulation(ph);
 }
+
 int	main(int ac, char **av)
 {
 	t_data *ph;
 
 	ph = malloc(sizeof(t_data));
-	if (!ph)
-		return (1);
 	if (ac == 5 || ac == 6)
 	{
 		parcing_data(ac, av, ph);
