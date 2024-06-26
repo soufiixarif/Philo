@@ -3,32 +3,31 @@
 
 void mentor_routine(t_data *ph)
 {
-	t_philo *philo;
 	int		cur_time;
+	int 	i;
 
-	while (1)
+	 while (1)
 	{
-		philo = ph->philos;
-		while(philo)
+		i = -1;
+		while (++i < ph->philo_num)
 		{
 			pthread_mutex_lock(&ph->lock);
+			pthread_mutex_lock(&ph->philos[i].protect);
 			cur_time = get_current_time();
-			if(cur_time - philo->last_meal > ph->dying_time)
+			if (cur_time - ph->philos[i].last_meal > ph->dying_time)
 			{
-				pthread_mutex_lock(&ph->dead);
 				ph->dead_flag = true;
-				pthread_mutex_unlock(&ph->dead);
+				printf("%lu\t%d died\n", get_current_time() - ph->stamp, ph->philos[i].id);
+				pthread_mutex_unlock(&ph->lock);
+				pthread_mutex_unlock(&ph->philos[i].protect);
+				return;
 			}
-			philo = philo->next;
+			pthread_mutex_unlock(&ph->philos[i].protect);
+			pthread_mutex_unlock(&ph->lock);
 		}
 	}
 }
 
-void	start_simulation(t_data *ph)
-{
-	data_init(ph);
-	simulation(ph);
-}
 
 int	main(int ac, char **av)
 {
@@ -38,7 +37,7 @@ int	main(int ac, char **av)
 	if (ac == 5 || ac == 6)
 	{
 		parcing_data(ac, av, ph);
-		start_simulation(ph);
+		data_init(ph);
 	}
 	else
 		printf("args error\n");

@@ -1,14 +1,15 @@
 NAME = philo
 SRC_D = mandatory
-SRC = $(SRC_D)/philo.c $(SRC_D)/parcing.c $(SRC_D)/libft0.c $(SRC_D)/data_init.c &(SRC_D)/simulation.c
+SRC = $(SRC_D)/philo.c $(SRC_D)/parcing.c $(SRC_D)/libft0.c $(SRC_D)/data_init.c $(SRC_D)/simulation.c $(SRC_D)/actions.c $(SRC_D)/time.c
 OBJ = $(SRC:.c=.o)
-CC = cc -g -fsanitize=address
-FLAGS = -Wall -Wextra -Werror
+CC = cc 
+FLAGS = -Wall -Wextra -Werror -fsanitize=thread -g
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
+	# rm -rf $(OBJ)
 
 $(SRC_D)/%.o: $(SRC_D)/%.c $(SRC_D)/philo.h Makefile
 	$(CC) $(FLAGS) -c $< -o $@

@@ -1,20 +1,49 @@
 #include "philo.h"
-
-void sleep_odd_philo(t_data *ph)
+static void	sleepodd(t_philo *philo)
 {
-	if (ph->philos->id % 2 != 0)
-		ft_usleep(ph->eating_time);
+	if (philo->id % 2 != 0)
+		ft_usleep(philo->data->eating_time / 2);
 }
 
-void	simulation(t_data *ph)
+static int breaksim(t_philo *philo)
 {
-	sleep_odd_philo(ph);
+	int result;
 
-	while(!is_dead(ph))
+	pthread_mutex_lock(&philo->data->lock);
+	if (philo->data->dead_flag || (philo->meals && philo->meals == philo->data->meals))
+		result = 1;
+	else
+		result = 0;
+	pthread_mutex_unlock(&philo->data->lock);
+	return result;
+}
+
+bool	get_bool(t_data *data, bool *src)
+{
+	bool	store;
+
+	pthread_mutex_lock(&data->lock);
+	store = *src;
+	pthread_mutex_unlock(&data->lock);
+	return (store);
+}
+
+void	*simulation(t_philo *philo)
+{
+	sleepodd(philo);
+	while(1)
 	{
-		eating_time(ph);
-		sleeping_time(ph);
-		
+		if (breaksim(philo))
+			exit(EXIT_SUCCESS);
+		eating_time(philo);
+		if (philo->data->philo_num > 1)
+		{
+			sleeping_time(philo);
+			ft_printf(4,philo->data,philo->id);
+		}
+		else
+			ft_usleep(philo->data->dying_time);
+		// printf("philo %d is thinking\n",philo->id);
 	}
-	
+	return (NULL);
 }

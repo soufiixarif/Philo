@@ -57,13 +57,13 @@ void    parcing_data(int ac, char **av, t_data *ph)
         if (!checkvalidity(av[i++]))
             exit(write(2, "args error",10));
     }
-    
     ph->philo_num = ft_atoi(av[1]);
-    ph->dying_time = ft_atoi(av[2]) * 1000;
-    ph->eating_time = ft_atoi(av[3]) * 1000;
-    ph->sleeping_time = ft_atoi(av[4]) * 1000;
-	if (ph->dying_time < 6e4 || ph->eating_time < 6e4 ||
-		ph->sleeping_time < 6e4)
+    ph->dying_time = ft_atoi(av[2]);
+    ph->eating_time = ft_atoi(av[3]);
+    ph->sleeping_time = ft_atoi(av[4]);
+	ph->meals = -1;
+	if (ph->dying_time < 60 || ph->eating_time < 60 ||
+		ph->sleeping_time < 60)
 		exit(write(2, "args error",10));
     if (ac == 6)
     {

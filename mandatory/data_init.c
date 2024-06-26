@@ -2,78 +2,67 @@
 
 void	fork_creator(t_data *ph)
 {
-    t_fork *forks;
 	int i;
 
-    forks = ph->forks;
-	if (!forks) 
+	i = -1;
+	while (i < ph->philo_num)
 	{
-		perror("Failed to allocate memory for forks");
-		exit(EXIT_FAILURE);
-	}
-	i = 1;
-	while (forks)
-	{
-		if (pthread_mutex_init(forks, NULL) != 0)
+		if (pthread_mutex_init(&ph->forks[i], NULL) != 0)
 		{
 			perror("Failed to initialize fork mutex");
 			exit(EXIT_FAILURE);
 		}
-        forks->id = i;
         i++;
-        forks = forks->next;
 	}
 }
 
 void join_philos(t_data *ph)
 {
-    t_philo *philos;
+	int i;
 
-    philos = ph->philos;
-    while(philos)
+	i = 0;
+    while(i < ph->philo_num)
     {
-        pthread_join(philos->philo, NULL);
-        philos = philos->next;
+        pthread_join(ph->philos[i].philo, NULL);
     }
 }
 
 void	philo_creator(t_data *ph)
 {
-	int i;
-    t_philo *philos;
-    t_fork  *forks;
+	int 		i;
+	pthread_t	mentor;
 
-    philos = ph->philos;
-    forks = ph->forks;
-	i = 1;
-	while (philos) 
+	i = -1;
+	while (++i < ph->philo_num)
 	{
-		philos->id = i;
-		philos->r_fork = &ph->forks;
-		philos->l_fork = &ph->forks->next;
-		if (pthread_create(&philos->philo, NULL, (void *)simulation, philos->philo) != 0)
+		ph->philos[i].id = i + 1;
+		ph->philos[i].last_meal = get_current_time();
+		ph->philos[i].meals = 0;
+		ph->philos[i].data = ph;
+		ph->philos[i].sleeptime = ph->sleeping_time;
+		ph->philos[i].r_fork = &ph->forks[i];
+		ph->philos[i].l_fork = &ph->forks[(i + 1) % ph->philo_num];
+		if (pthread_create(&ph->philos[i].philo, NULL, (void *)simulation, &ph->philos[i]) != 0)
 		{
 			perror("Failed to create thread");
 			exit(EXIT_FAILURE);
 		}
-        i++;
-        philos = philos->next;
 	}
-    ph->mentor = malloc(sizeof (pthread_t));
-	pthread_create(&ph->mentor,NULL,(void *)mentor_routine,ph);
+    mentor = malloc(sizeof (pthread_t));
+	pthread_create(&mentor,NULL,(void *)mentor_routine,ph);
+	pthread_join(mentor,NULL);
     join_philos(ph);
-	pthread_join(ph->mentor,NULL);
 }
 
 void data_init(t_data *ph)
 {
 	ph->start_sim = 0;
 	ph->dead_flag = false;
-	ph->philos->id = 0;
-	ph->philos->last_meal = 0;
-	ph->philos->meals = 0;
+	if (ph->philo_num == 0 || ph->meals == 0)
+		return ;
     ph->philos = malloc(sizeof(t_philo) * ph->philo_num);
-    ph->forks = malloc(ph->philo_num * sizeof(t_fork));
+    ph->forks = malloc(ph->philo_num * sizeof(pthread_mutex_t));
     fork_creator(ph);
+	ph->stamp = get_current_time();
 	philo_creator(ph);
 }
