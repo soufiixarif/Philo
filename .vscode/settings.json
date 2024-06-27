@@ -3,5 +3,8 @@
         "activityBar.background": "#57132E",
         "titleBar.activeBackground": "#7A1A40",
         "titleBar.activeForeground": "#FEFBFC"
+    },
+    "files.associations": {
+        "__config": "c"
     }
 }

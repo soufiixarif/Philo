@@ -1,26 +1,37 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sarif <sarif@student.1337.ma>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/28 00:36:58 by sarif             #+#    #+#             */
+/*   Updated: 2024/06/28 00:36:58 by sarif            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "philo.h"
 
-void mentor_routine(t_data *ph)
+void	mentor_routine(t_data *ph)
 {
 	int		cur_time;
-	int 	i;
+	int		i;
 
-	 while (1)
+	while (1)
 	{
 		i = -1;
 		while (++i < ph->philo_num)
 		{
 			pthread_mutex_lock(&ph->lock);
 			pthread_mutex_lock(&ph->philos[i].protect);
-			cur_time = get_current_time();
+			cur_time = get_time();
 			if (cur_time - ph->philos[i].last_meal > ph->dying_time)
 			{
 				ph->dead_flag = true;
-				printf("%lu\t%d died\n", get_current_time() - ph->stamp, ph->philos[i].id);
+				ft_printf(5, ph, ph->philos[i].id);
 				pthread_mutex_unlock(&ph->lock);
 				pthread_mutex_unlock(&ph->philos[i].protect);
-				return;
+				return ;
 			}
 			pthread_mutex_unlock(&ph->philos[i].protect);
 			pthread_mutex_unlock(&ph->lock);
@@ -28,19 +39,16 @@ void mentor_routine(t_data *ph)
 	}
 }
 
-
 int	main(int ac, char **av)
 {
-	t_data *ph;
+	t_data	ph;
 
-	ph = malloc(sizeof(t_data));
 	if (ac == 5 || ac == 6)
 	{
-		parcing_data(ac, av, ph);
-		data_init(ph);
+		parcing_data(ac, av, &ph);
+		data_init(&ph);
 	}
 	else
 		printf("args error\n");
-	free(ph);
-	return (0);	
+	return (0);
 }
