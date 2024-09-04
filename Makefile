@@ -9,7 +9,6 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) $(FLAGS) $(OBJ) -o $(NAME)
-	# rm -rf $(OBJ)
 
 $(SRC_D)/%.o: $(SRC_D)/%.c $(SRC_D)/philo.h Makefile
 	$(CC) $(FLAGS) -c $< -o $@
