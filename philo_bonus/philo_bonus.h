@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:40 by sarif             #+#    #+#             */
-/*   Updated: 2024/08/30 20:16:10 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/06 14:27:02 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdbool.h>
 # include <sys/time.h>
 # include <semaphore.h>
+# include <signal.h>
 
 typedef struct s_data	t_data;
 
@@ -28,28 +29,27 @@ typedef struct s_philo
 	pthread_t		philo;
 	t_data			*data;
 	int				id;
-	int				last_meal;
+	size_t			last_meal;
 	int				meals;
-	int				sleeptime;
+	unsigned long	sleeptime;
 	int				pid;
 }	t_philo;
 
 struct	s_data
 {
-	t_philo		*philos;
-	pthread_t	*mentor;
-	sem_t		*forks;
-	long		philo_num;
-	long		dying_time;
-	long		eating_time;
-	long		sleeping_time;
-	long		meals;
-	long		start_sim;
-	int			stamp;
+	t_philo				*philos;
+	pthread_t			*mentor;
+	sem_t				*forks;
+	unsigned long		philo_num;
+	unsigned long		dying_time;
+	unsigned long		eating_time;
+	unsigned long		sleeping_time;
+	int					meals;
+	size_t				stamp;
 };
 
 // time.c
-size_t	get_time(void);
+size_t	ft_get_time(void);
 int		ft_usleep(size_t milliseconds);
 
 //philo

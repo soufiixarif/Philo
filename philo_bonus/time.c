@@ -6,13 +6,13 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:35 by sarif             #+#    #+#             */
-/*   Updated: 2024/08/30 20:14:36 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/05 16:30:38 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-size_t	get_time(void)
+size_t	ft_get_time(void)
 {
 	struct timeval	time;
 
@@ -25,8 +25,8 @@ int	ft_usleep(size_t milliseconds)
 {
 	size_t	start;
 
-	start = get_time();
-	while ((get_time() - start) < milliseconds)
+	start = ft_get_time();
+	while ((ft_get_time() - start) < milliseconds)
 		usleep(500);
 	return (0);
 }
