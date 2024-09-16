@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
+/*   By: sarif <sarif@student.1337.ma>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:40 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/06 14:27:02 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/15 20:47:28 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@
 # include <semaphore.h>
 # include <signal.h>
 
+# define T_FORK "has taken a fork"
+# define SLEEP "is sleeping"
+# define EAT "is eating"
+# define THINK "is thinking"
+# define DEAD "died"
+
 typedef struct s_data	t_data;
 
 typedef struct s_philo
@@ -29,6 +35,8 @@ typedef struct s_philo
 	pthread_t		philo;
 	t_data			*data;
 	int				id;
+	sem_t			*philo_sem;
+	char			*philo_name;
 	size_t			last_meal;
 	int				meals;
 	unsigned long	sleeptime;
@@ -40,6 +48,7 @@ struct	s_data
 	t_philo				*philos;
 	pthread_t			*mentor;
 	sem_t				*forks;
+	sem_t				*ft_printf;
 	unsigned long		philo_num;
 	unsigned long		dying_time;
 	unsigned long		eating_time;
@@ -58,6 +67,7 @@ void	start_simulation(t_data *data);
 void	simulation(t_philo *philo);
 void	data_init(t_data *data);
 void	parcing_data(int ac, char **av, t_data *data);
+void	ft_printf(t_data *d, int id, long time, char *action);
 
 //libft
 size_t	ft_strlen(char *s);

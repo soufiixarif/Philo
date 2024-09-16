@@ -1,6 +1,6 @@
 NAME = philo_bonus
 SRC_D = .
-SRC = $(SRC_D)/data_init_bonus.c $(SRC_D)/parcing_bonus.c $(SRC_D)/libft_bonus.c $(SRC_D)/philo_bonus.c $(SRC_D)/simulation_bonus.c $(SRC_D)/time.c
+SRC = $(SRC_D)/data_init_bonus.c $(SRC_D)/parcing_bonus.c $(SRC_D)/libft_bonus.c $(SRC_D)/philo_bonus.c $(SRC_D)/simulation_bonus.c $(SRC_D)/time.c utils_bonus.c
 OBJ = $(SRC:.c=.o)
 CC = cc
 FLAGS = -Wall -Wextra -Werror

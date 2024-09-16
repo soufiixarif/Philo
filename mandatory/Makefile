@@ -1,5 +1,5 @@
 NAME = philo
-SRC_D = mandatory
+SRC_D = .
 SRC = $(SRC_D)/philo.c $(SRC_D)/parcing.c $(SRC_D)/libft0.c $(SRC_D)/data_init.c $(SRC_D)/simulation.c $(SRC_D)/actions.c $(SRC_D)/time.c
 OBJ = $(SRC:.c=.o)
 CC = cc 
