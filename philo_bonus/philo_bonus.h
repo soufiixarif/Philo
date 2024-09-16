@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sarif <sarif@student.1337.ma>              +#+  +:+       +#+        */
+/*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:40 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/15 20:47:28 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/16 23:21:14 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,29 +37,29 @@ typedef struct s_philo
 	int				id;
 	sem_t			*philo_sem;
 	char			*philo_name;
-	size_t			last_meal;
+	long			last_meal;
 	int				meals;
-	unsigned long	sleeptime;
+	bool			full;
 	int				pid;
 }	t_philo;
 
 struct	s_data
 {
-	t_philo				*philos;
-	pthread_t			*mentor;
-	sem_t				*forks;
-	sem_t				*ft_printf;
-	unsigned long		philo_num;
-	unsigned long		dying_time;
-	unsigned long		eating_time;
-	unsigned long		sleeping_time;
-	int					meals;
-	size_t				stamp;
+	t_philo		*philos;
+	pthread_t	*mentor;
+	sem_t		*forks;
+	sem_t		*ft_printf;
+	long		philo_num;
+	long		dying_time;
+	long		eating_time;
+	long		sleeping_time;
+	int			meals;
+	long		stamp;
 };
 
 // time.c
-size_t	ft_get_time(void);
-int		ft_usleep(size_t milliseconds);
+long	ft_get_time(void);
+int		ft_usleep(long milliseconds);
 
 //philo
 void	mentor_routine(t_philo	*philo);
@@ -68,9 +68,14 @@ void	simulation(t_philo *philo);
 void	data_init(t_data *data);
 void	parcing_data(int ac, char **av, t_data *data);
 void	ft_printf(t_data *d, int id, long time, char *action);
+char	*get_philo_name(int id);
+void	ft_wait_pid(t_data *data);
+void	ft_exit_prog(t_data *data);
+void	ft_stop_simulation(t_data *data);
 
 //libft
 size_t	ft_strlen(char *s);
 long	ft_atoi(char *str);
+char	*ft_itoa(int n);
 
 #endif
