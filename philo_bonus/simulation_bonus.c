@@ -6,50 +6,44 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:38 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/16 23:20:43 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/25 11:45:04 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	sleep_oddphilo(t_philo *philo)
+void	ft_eat_action(t_philo *philo, t_data *data)
 {
-	if (philo->id % 2 != 0)
-		ft_usleep(philo->data->eating_time / 2);
+	sem_wait(data->forks);
+	ft_printf(data, philo->id, ft_get_time() - data->stamp, T_FORK);
+	sem_wait(data->forks);
+	ft_printf(data, philo->id, ft_get_time() - data->stamp, T_FORK);
+	sem_wait(philo->philo_sem);
+	philo->last_meal = ft_get_time();
+	philo->meals++;
+	sem_post(philo->philo_sem);
+	ft_printf(data, philo->id, ft_get_time() - data->stamp, EAT);
+	ft_usleep(data->eating_time);
+	sem_post(data->forks);
+	sem_post(data->forks);
 }
 
 void	simulation(t_philo *philo)
 {
-	pthread_t	mentor;
 	t_data		*data;
+	pthread_t	mentor;
 
+	mentor = NULL;
 	data = philo->data;
-	if(data->philo_num > 1)
+	if (data->philo_num > 1)
 		sleep_oddphilo(philo);
-	if (pthread_create(&mentor, NULL, (void *)mentor_routine, philo) != 0)
-	{
-		free (philo->data->philos);
-		exit(EXIT_FAILURE);//clean code after exit
-	}
+	mentor_creator(data, mentor, philo);
 	philo->last_meal = ft_get_time();
 	while (1)
 	{
-		// sem_wait(philo->philo_sem);
 		if (philo->meals == philo->data->meals)
 			exit(0);
-		// sem_post(philo->philo_sem);
-		sem_wait(data->forks);
-		ft_printf(data, philo->id, ft_get_time() - data->stamp, T_FORK);
-		sem_wait(data->forks);
-		ft_printf(data, philo->id, ft_get_time() - data->stamp, T_FORK);
-		sem_wait(philo->philo_sem);
-		philo->last_meal = ft_get_time();
-		philo->meals++;
-		sem_post(philo->philo_sem);
-		ft_printf(data, philo->id, ft_get_time() - data->stamp, EAT);
-		ft_usleep(data->eating_time);
-		sem_post(data->forks);
-		sem_post(data->forks);
+		ft_eat_action(philo, data);
 		if (data->philo_num > 1)
 		{
 			ft_printf(data, philo->id, ft_get_time() - data->stamp, SLEEP);
@@ -75,11 +69,15 @@ void	mentor_routine(t_philo *philo)
 		sem_wait(philo->philo_sem);
 		if (cur_time - philo->last_meal > data->dying_time)
 		{
-			printf("Philosopher %d: current time %lu, last meal time %lu, difference: %lu\n",
-			philo->id, cur_time, philo->last_meal, cur_time - philo->last_meal);
 			ft_printf(philo->data, philo->id, cur_time - data->stamp, DEAD);
 			sem_post(philo->philo_sem);
-			exit(2);// clean code after exit
+			sem_close(philo->philo_sem);
+			sem_unlink(philo->philo_name);
+			free(philo->philo_name);
+			sem_close(data->forks);
+			sem_unlink("/forks");
+			free(data->philos);
+			exit(2);
 		}
 		sem_post(philo->philo_sem);
 	}
@@ -112,5 +110,5 @@ void	start_simulation(t_data *data)
 			data->philos[i].pid = pid;
 	}
 	ft_wait_pid(data);
-	ft_exit_prog(data);
+	ft_clean_prog(data);
 }

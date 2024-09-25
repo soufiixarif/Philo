@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 20:47:21 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/16 21:53:09 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/25 11:39:59 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,13 @@ void	ft_printf(t_data *d, int id, long time, char *action)
 
 void	ft_wait_pid(t_data *data)
 {
-	unsigned int	i;
+	int	i;
 	int	status;
 
 	i = 0;
 	while (i < data->philo_num)
 	{
-		waitpid((long)NULL, &status, 0);
+		waitpid((long) NULL, &status, 0);
 		if (WEXITSTATUS(status) == 2)
 		{
 			ft_stop_simulation(data);
@@ -38,7 +38,7 @@ void	ft_wait_pid(t_data *data)
 	}
 }
 
-void	ft_exit_prog(t_data *data)
+void	ft_clean_prog(t_data *data)
 {
 	unsigned int	i;
 
@@ -47,10 +47,27 @@ void	ft_exit_prog(t_data *data)
 	{
 		sem_close(data->philos[i].philo_sem);
 		sem_unlink(data->philos[i].philo_name);
+		free(data->philos[i].philo_name);
 		i++;
 	}
 	sem_close(data->forks);
 	sem_close(data->ft_printf);
 	sem_unlink("/forks");
 	sem_unlink("/ft_printf");
+	free(data->philos);
+}
+
+void	sleep_oddphilo(t_philo *philo)
+{
+	if (philo->id % 2 != 0)
+		ft_usleep(philo->data->eating_time / 2);
+}
+
+void	mentor_creator(t_data *data, pthread_t mentor, t_philo *philo)
+{
+	if (pthread_create(&mentor, NULL, (void *)mentor_routine, philo) != 0)
+	{
+		ft_clean_prog(data);
+		exit(EXIT_FAILURE);
+	}
 }

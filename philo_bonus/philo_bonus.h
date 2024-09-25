@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:40 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/16 23:21:14 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/25 11:16:42 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,12 @@ void	parcing_data(int ac, char **av, t_data *data);
 void	ft_printf(t_data *d, int id, long time, char *action);
 char	*get_philo_name(int id);
 void	ft_wait_pid(t_data *data);
-void	ft_exit_prog(t_data *data);
+void	ft_clean_prog(t_data *data);
 void	ft_stop_simulation(t_data *data);
+sem_t	*ft_semopen(t_data *data, char *name, int n);
+void	sleep_oddphilo(t_philo *philo);
+void	mentor_creator(t_data *data, pthread_t mentor, t_philo *philo);
+void	ft_eat_action(t_philo *philo, t_data *data);
 
 //libft
 size_t	ft_strlen(char *s);

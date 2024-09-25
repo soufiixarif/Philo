@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:50 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/16 21:57:08 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/25 09:48:14 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,21 @@ char	*get_philo_name(int id)
 	return (name);
 }
 
+sem_t	*ft_semopen(t_data *data, char *name, int n)
+{
+	sem_t	*semaphore;
+
+	sem_unlink(name);
+	semaphore = sem_open(name, O_CREAT | O_EXCL, 0644, n);
+	if (semaphore == SEM_FAILED)
+	{
+		perror("Failed to open semaphore");
+		ft_clean_prog(data);
+		exit(EXIT_FAILURE);
+	}
+	return (semaphore);
+}
+
 void	data_init(t_data *data)
 {
 	unsigned int	i;
@@ -56,21 +71,9 @@ void	data_init(t_data *data)
 		data->philos[i].full = false;
 		data->philos[i].philo_name = name;
 		sem_unlink(name);
-		data->philos[i].philo_sem = sem_open(name, O_CREAT | O_EXCL, 0644, 1);
-		if (data->philos[i].philo_sem == SEM_FAILED)
-		{
-			perror("Failed to open semaphore");
-			exit(EXIT_FAILURE);// to change it (clean code after exit)
-		}
+		data->philos[i].philo_sem = ft_semopen(data, name, 1);
 	}
-	sem_unlink("/forks");
-	sem_unlink("/ft_printf");
-	data->forks = sem_open("/forks", O_CREAT | O_EXCL, 0644, data->philo_num);
-	data->ft_printf = sem_open("/ft_printf", O_CREAT | O_EXCL, 0644, 1);
-	if (data->forks == SEM_FAILED || data->ft_printf == SEM_FAILED)
-	{
-		perror("Failed to open semaphore");
-		exit(EXIT_FAILURE);// to change it (clean code after exit)
-	}
+	data->forks = ft_semopen(data, "/forks", data->philo_num);
+	data->ft_printf = ft_semopen(data, "/ft_printf", 1);
 	start_simulation(data);
 }
