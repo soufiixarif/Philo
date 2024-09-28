@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:36:51 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/28 16:38:12 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/28 16:43:00 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,12 +92,4 @@ int	data_init(t_data *ph)
 		return (0);
 	ph->stamp = get_time();
 	return (philo_creator(ph));
-}
-
-int	ft_mutex_init(pthread_mutex_t *mutex, t_data *data)
-{
-	(void)data;
-	if (pthread_mutex_init(mutex, NULL) != 0)
-		return (0);
-	return (1);
 }
