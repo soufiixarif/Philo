@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:35 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/16 23:20:11 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/29 22:22:27 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,20 @@ int	ft_usleep(long milliseconds)
 	while ((ft_get_time() - start) < milliseconds)
 		usleep(150);
 	return (0);
+}
+
+int	is_full(t_philo philo, t_data *data)
+{
+	if (data->meals != -1 && philo.meals >= data->meals)
+		return (1);
+	return (0);
+}
+
+void	ft_unlock(t_philo *philo, t_data *data)
+{
+	(void)data;
+	sem_post(philo->philo_sem);
+	sem_close(philo->philo_sem);
+	sem_unlink(philo->philo_name);
+	free(philo->philo_name);
 }

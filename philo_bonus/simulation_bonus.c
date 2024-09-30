@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:38 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/25 11:45:04 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/29 22:32:25 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,16 @@ void	simulation(t_philo *philo)
 	t_data		*data;
 	pthread_t	mentor;
 
-	mentor = NULL;
+	mentor = 0;
 	data = philo->data;
 	if (data->philo_num > 1)
 		sleep_oddphilo(philo);
-	mentor_creator(data, mentor, philo);
 	philo->last_meal = ft_get_time();
+	mentor_creator(data, mentor, philo);
+	pthread_detach(mentor);
 	while (1)
 	{
+
 		if (philo->meals == philo->data->meals)
 			exit(0);
 		ft_eat_action(philo, data);
@@ -53,31 +55,29 @@ void	simulation(t_philo *philo)
 		else
 			ft_usleep(data->dying_time);
 	}
-	pthread_join(mentor, NULL);
 }
 
 void	mentor_routine(t_philo *philo)
 {
-	long	cur_time;
 	t_data	*data;
 
 	data = philo->data;
 	ft_usleep(philo->data->dying_time / 2);
 	while (1)
 	{
-		cur_time = ft_get_time();
 		sem_wait(philo->philo_sem);
-		if (cur_time - philo->last_meal > data->dying_time)
+		if (!is_full(*philo, data)
+			&& ft_get_time() - philo->last_meal > data->dying_time)
 		{
-			ft_printf(philo->data, philo->id, cur_time - data->stamp, DEAD);
-			sem_post(philo->philo_sem);
-			sem_close(philo->philo_sem);
-			sem_unlink(philo->philo_name);
-			free(philo->philo_name);
-			sem_close(data->forks);
-			sem_unlink("/forks");
-			free(data->philos);
+			ft_printf(philo->data, philo->id,
+				ft_get_time() - data->stamp, DEAD);
+			ft_unlock(philo, data);
 			exit(2);
+		}
+		if (is_full(*philo, data))
+		{
+			ft_unlock(philo, data);
+			exit(0);
 		}
 		sem_post(philo->philo_sem);
 	}
