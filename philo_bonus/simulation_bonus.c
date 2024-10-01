@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:38 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/29 22:32:25 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/01 09:52:01 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ void	simulation(t_philo *philo)
 	pthread_detach(mentor);
 	while (1)
 	{
-
 		if (philo->meals == philo->data->meals)
 			exit(0);
 		ft_eat_action(philo, data);
@@ -60,11 +59,13 @@ void	simulation(t_philo *philo)
 void	mentor_routine(t_philo *philo)
 {
 	t_data	*data;
+	long	cur_time;
 
 	data = philo->data;
 	ft_usleep(philo->data->dying_time / 2);
 	while (1)
 	{
+		cur_time = ft_get_time();
 		sem_wait(philo->philo_sem);
 		if (!is_full(*philo, data)
 			&& ft_get_time() - philo->last_meal > data->dying_time)
@@ -73,11 +74,6 @@ void	mentor_routine(t_philo *philo)
 				ft_get_time() - data->stamp, DEAD);
 			ft_unlock(philo, data);
 			exit(2);
-		}
-		if (is_full(*philo, data))
-		{
-			ft_unlock(philo, data);
-			exit(0);
 		}
 		sem_post(philo->philo_sem);
 	}

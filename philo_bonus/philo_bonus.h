@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:40 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/29 22:14:27 by sarif            ###   ########.fr       */
+/*   Updated: 2024/09/30 21:21:27 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 # include <semaphore.h>
 # include <signal.h>
 # include <fcntl.h>
-#include <sys/wait.h>
+# include <stdatomic.h>
+# include <sys/wait.h>
 
 # define T_FORK "has taken a fork"
 # define SLEEP "is sleeping"
@@ -40,7 +41,7 @@ typedef struct s_philo
 	int				id;
 	sem_t			*philo_sem;
 	char			*philo_name;
-	long			last_meal;
+	atomic_long		last_meal;
 	int				meals;
 	bool			full;
 	int				pid;

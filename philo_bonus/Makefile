@@ -3,7 +3,7 @@ SRC_D = .
 SRC = $(SRC_D)/data_init_bonus.c $(SRC_D)/parcing_bonus.c $(SRC_D)/libft_bonus.c $(SRC_D)/philo_bonus.c $(SRC_D)/simulation_bonus.c $(SRC_D)/time.c utils_bonus.c ft_itoa.c
 OBJ = $(SRC:.c=.o)
 CC = gcc
-FLAGS = -Wall -Wextra -Werror -g -fsanitize=thread
+FLAGS = -Wall -Wextra -Werror #-g -fsanitize=thread
 
 all: $(NAME)
 

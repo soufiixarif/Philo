@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:36:45 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/28 16:40:28 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/01 10:05:33 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ void	ft_printf(int i, t_data *data, int id)
 		printf("%ld\t%d is thinking\n", get_time() - data->stamp, id);
 	if (i == 5)
 		printf("%ld\t%d died\n", get_time() - data->stamp, id);
-	if (i != 5)
-		pthread_mutex_unlock(&data->print);
+	pthread_mutex_unlock(&data->print);
 }
 
 void	ft_mutex_destroy(t_data *data, int i)
