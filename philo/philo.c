@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:36:58 by sarif             #+#    #+#             */
-/*   Updated: 2024/10/08 11:25:29 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 20:45:36 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ int	main(int ac, char **av)
 	{
 		if (!parcing_data(ac, av, &ph))
 			return (write(1, "args error\n", 11));
+		if (ph.philo_num == 0 || ph.meals == 0)
+			return (1);
 		if (!data_init(&ph))
 		{
 			ft_mutex_destroy(&ph, ph.philo_num - 1);

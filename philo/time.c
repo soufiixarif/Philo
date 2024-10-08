@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:37:05 by sarif             #+#    #+#             */
-/*   Updated: 2024/10/08 11:26:34 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 20:26:31 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	ft_usleep(size_t milliseconds)
 
 	start = get_time();
 	while ((get_time() - start) < milliseconds)
-		usleep(150);
+		usleep(100);
 	return (0);
 }
 

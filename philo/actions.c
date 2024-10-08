@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:36:45 by sarif             #+#    #+#             */
-/*   Updated: 2024/10/08 11:01:43 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 20:42:05 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,9 @@ void	ft_mutex_destroy(t_data *data, int i)
 		pthread_mutex_destroy(&data->lock.mtx);
 	if (data->print.init)
 		pthread_mutex_destroy(&data->print.mtx);
-	while (i >= 0)
+	while (data->philos && i >= 0)
 	{
-		if (data->forks[i].init)
+		if (data->forks && data->forks[i].init)
 			pthread_mutex_destroy(&data->forks[i].mtx);
 		if (data->philos[i].protect.init)
 			pthread_mutex_destroy(&data->philos[i].protect.mtx);

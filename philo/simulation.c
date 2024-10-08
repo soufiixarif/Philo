@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:37:03 by sarif             #+#    #+#             */
-/*   Updated: 2024/10/08 10:52:50 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 20:37:28 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,13 @@ void	*simulation(t_philo *philo)
 		if (breaksim(philo))
 			return (NULL);
 		eating_time(philo);
+		if (breaksim(philo))
+			return (NULL);
 		if (philo->data->philo_num > 1)
 		{
 			sleeping_time(philo);
+			if (breaksim(philo))
+				return (NULL);
 			ft_printf(4, philo->data, philo->id);
 		}
 		else

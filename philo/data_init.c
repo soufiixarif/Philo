@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:36:51 by sarif             #+#    #+#             */
-/*   Updated: 2024/10/08 11:01:46 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 20:54:23 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,12 +77,10 @@ int	philo_creator(t_data *ph)
 int	data_init(t_data *ph)
 {
 	ph->dead_flag = false;
-	if (ph->philo_num == 0 || ph->meals == 0)
-		return (0);
 	ph->philos = malloc(sizeof(t_philo) * ph->philo_num);
 	if (!ph->philos)
 		return (0);
-	ph->forks = malloc(ph->philo_num * sizeof(pthread_mutex_t));
+	ph->forks = malloc(ph->philo_num * sizeof(t_mtx));
 	if (!ph->forks)
 		return (free(ph->philos), 0);
 	if (!ft_mutex_init(&ph->lock) || !ft_mutex_init(&ph->print))
