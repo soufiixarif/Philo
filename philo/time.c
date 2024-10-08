@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:37:05 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/28 16:43:06 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 11:26:34 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,26 @@ int	ft_usleep(size_t milliseconds)
 
 	start = get_time();
 	while ((get_time() - start) < milliseconds)
-		usleep(500);
+		usleep(150);
 	return (0);
 }
 
-int	ft_mutex_init(pthread_mutex_t *mutex, t_data *data)
+int	ft_mutex_init(t_mtx *mutex)
 {
-	(void)data;
-	if (pthread_mutex_init(mutex, NULL) != 0)
-		return (0);
+	if (pthread_mutex_init(&mutex->mtx, NULL) != 0)
+		return (mutex->init = false, 0);
+	mutex->init = true;
 	return (1);
+}
+
+void	init_to_false(t_data *data)
+{
+	int	i;
+
+	i = -1;
+	while (++i < data->philo_num)
+	{
+		data->forks[i].init = false;
+		data->philos[i].protect.init = false;
+	}
 }

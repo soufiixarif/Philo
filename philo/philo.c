@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:36:58 by sarif             #+#    #+#             */
-/*   Updated: 2024/10/01 10:00:29 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 11:25:29 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ int	is_full(t_philo philo, t_data *ph, int *cnt)
 	return (0);
 }
 
+void	mutex_unlock_norm(t_data *ph, t_philo *philo)
+{
+	pthread_mutex_unlock(&ph->lock.mtx);
+	pthread_mutex_unlock(&philo->protect.mtx);
+}
+
 void	mentor_routine(t_data *ph)
 {
 	int	i;
@@ -29,22 +35,21 @@ void	mentor_routine(t_data *ph)
 		(1) && (i = -1, cnt = 0);
 		while (++i < ph->philo_num)
 		{
-			pthread_mutex_lock(&ph->lock);
-			pthread_mutex_lock(&ph->philos[i].protect);
+			pthread_mutex_lock(&ph->lock.mtx);
+			pthread_mutex_lock(&ph->philos[i].protect.mtx);
 			if (!is_full(ph->philos[i], ph, &cnt)
 				&& get_time() - ph->philos[i].last_meal > ph->dying_time)
 			{
 				ph->dead_flag = true;
 				ft_printf(5, ph, ph->philos[i].id);
-				pthread_mutex_unlock(&ph->lock);
-				pthread_mutex_unlock(&ph->philos[i].protect);
+				mutex_unlock_norm(ph, &ph->philos[i]);
 				return ;
 			}
-			pthread_mutex_unlock(&ph->philos[i].protect);
-			pthread_mutex_unlock(&ph->lock);
+			mutex_unlock_norm(ph, &ph->philos[i]);
 		}
 		if (cnt == ph->philo_num)
 			break ;
+		ft_usleep(50);
 	}
 }
 
@@ -54,14 +59,16 @@ int	main(int ac, char **av)
 
 	if (ac == 5 || ac == 6)
 	{
-		parcing_data(ac, av, &ph);
+		if (!parcing_data(ac, av, &ph))
+			return (write(1, "args error\n", 11));
 		if (!data_init(&ph))
+		{
+			ft_mutex_destroy(&ph, ph.philo_num - 1);
 			return (1);
+		}
 	}
 	else
-		printf("args error\n");
-	pthread_mutex_destroy(&ph.lock);
-	pthread_mutex_destroy(&ph.print);
+		return (printf("args error\n"));
 	ft_mutex_destroy(&ph, ph. philo_num - 1);
 	(free(ph.forks), free(ph.philos));
 	return (0);

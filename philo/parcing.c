@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parcing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sarif <sarif@student.1337.ma>              +#+  +:+       +#+        */
+/*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 00:36:56 by sarif             #+#    #+#             */
-/*   Updated: 2024/06/28 00:36:56 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/08 11:19:14 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	checkvalidity(char *s)
 	return (1);
 }
 
-void	parcing_data(int ac, char **av, t_data *ph)
+int	parcing_data(int ac, char **av, t_data *ph)
 {
 	int	i;
 
@@ -67,7 +67,7 @@ void	parcing_data(int ac, char **av, t_data *ph)
 	while (i < ac)
 	{
 		if (!checkvalidity(av[i++]))
-			exit(write(2, "args error", 10));
+			return (0);
 	}
 	ph->philo_num = ft_atoi(av[1]);
 	ph->dying_time = ft_atoi(av[2]);
@@ -75,12 +75,13 @@ void	parcing_data(int ac, char **av, t_data *ph)
 	ph->sleeping_time = ft_atoi(av[4]);
 	ph->meals = -1;
 	if (ph->dying_time < 60 || ph->eating_time < 60 || ph->sleeping_time < 60)
-		exit(write(2, "args error", 10));
+		return (0);
 	if (ac == 6)
 	{
 		if (!checkvalidity(av[5]))
-			exit(write(2, "args error", 10));
+			return (0);
 		else
 			ph->meals = ft_atoi(av[5]);
 	}
+	return (1);
 }
