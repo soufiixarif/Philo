@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:38 by sarif             #+#    #+#             */
-/*   Updated: 2024/10/01 09:52:01 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/09 11:35:25 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	mentor_routine(t_philo *philo)
 			exit(2);
 		}
 		sem_post(philo->philo_sem);
+		ft_usleep(50);
 	}
 }
 

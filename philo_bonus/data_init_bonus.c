@@ -6,7 +6,7 @@
 /*   By: sarif <sarif@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/30 20:14:50 by sarif             #+#    #+#             */
-/*   Updated: 2024/09/29 20:48:55 by sarif            ###   ########.fr       */
+/*   Updated: 2024/10/09 11:41:48 by sarif            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	data_init(t_data *data)
 		data->philos[i].meals = 0;
 		data->philos[i].full = false;
 		data->philos[i].philo_name = name;
-		sem_unlink(name);
 		data->philos[i].philo_sem = ft_semopen(data, name, 1);
 	}
 	data->forks = ft_semopen(data, "/forks", data->philo_num);
